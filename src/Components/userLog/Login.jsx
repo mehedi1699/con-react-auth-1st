@@ -1,10 +1,14 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { authContext } from "../AuthProvider/AuthProvider";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 const Login = () => {
-    const {loginUser} = useContext(authContext)
+    const {loginUser,setUser,googleLogin,user} = useContext(authContext)
 
+    const location=useLocation()
+    console.log(location)
+    const nevigate = useNavigate()
 
     const handleLogin = e=>{
         e.preventDefault()
@@ -12,8 +16,26 @@ const Login = () => {
         const password = e.target.password.value;
 
         loginUser(email,password)
-        console.log(email,password)
+        .then(result=>{
+            setUser(result.user)
+        })
+        .catch(error=>{
+            console.log(error.message)
+        })
     }
+    const handleGoogleLogin =()=>{
+        googleLogin()
+        .then(result=> {setUser(result.user)
+            nevigate(location.state)
+        })
+        .catch(error=> console.log(error.message))
+
+    }
+    // useEffect(()=>{
+    //     if(user){
+    //         nevigate(location.state)
+    //     }
+    // },[])
 
 
     return (
@@ -39,7 +61,9 @@ const Login = () => {
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">LOG IN</button>
                         </div>
+                       
                     </form>
+                    <button onClick={handleGoogleLogin} className=" mx-8 btn btn-secondary">Goole Login </button>
                 </div>
             </div>
         </div>

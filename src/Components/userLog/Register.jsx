@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { authContext } from "../AuthProvider/AuthProvider";
 
-
 const Register = () => {
     const {registerUser} = useContext(authContext)
     const [error,setError]= useState()
@@ -13,6 +12,9 @@ const Register = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
+
+        setError('')
+
         if(password.length < 6){
             setError("password must be 6 characters")
             return
@@ -26,9 +28,15 @@ const Register = () => {
             return
         }
         
-        setError('')
+        
 
         registerUser(email,password)
+        .then(result=>{
+            console.log(result)
+        })
+        .catch(error=>{
+            setError(error.message)
+        })
         // console.log(name,photo,email,password,confirmPassword)
     }
 
